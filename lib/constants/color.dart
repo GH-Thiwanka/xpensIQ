@@ -15,8 +15,3 @@ const Color kExepenceColor = Color(0xFFF44336);
 const Color kSavingColor = Color(0xFF009688);
 
 const double kDefultPadding = 10;
-/*final screenWidth = MediaQuery.of(context).size.width;
-final screenHeight = MediaQuery.of(context).size.height;
-
-final horizontalPadding = screenWidth * 0.05; // 5% of screen width
-final verticalPadding = screenHeight * 0.02;*/
