@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xpensiq/screens/splach_screen.dart';
+import 'package:xpensiq/service/userService.dart';
+import 'package:xpensiq/widget/wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +20,21 @@ class XpensIQ extends StatefulWidget {
 class _XpensIQState extends State<XpensIQ> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplachScreen(),
+    return FutureBuilder(
+      future: Userservice.checkUserName(),
+      builder: (context, snapshot) {
+        //if the snapshot is still waiting
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          bool hasUserName = snapshot.data ?? false;
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(fontFamily: 'Inter'),
+            home: Wrapper(shawMainScreen: hasUserName),
+          );
+        }
+      },
     );
   }
 }

@@ -115,7 +115,7 @@ class _RegisterpageState extends State<Registerpage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: BorderSide(
-                                color: kBorDivColor,
+                                color: kSecondaryTextColor.withAlpha(100),
                                 width: 1.5,
                               ),
                             ),
@@ -146,7 +146,7 @@ class _RegisterpageState extends State<Registerpage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: BorderSide(
-                                color: kBorDivColor,
+                                color: kSecondaryTextColor.withAlpha(100),
                                 width: 1.5,
                               ),
                             ),
@@ -177,7 +177,7 @@ class _RegisterpageState extends State<Registerpage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: BorderSide(
-                                color: kBorDivColor,
+                                color: kSecondaryTextColor.withAlpha(100),
                                 width: 1.5,
                               ),
                             ),

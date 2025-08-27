@@ -32,4 +32,12 @@ class Userservice {
       err.toString();
     }
   }
+
+  //methord to cheack username is saved in the shared prefarances
+  static Future<bool> checkUserName() async {
+    //create an instence for shared prefareance
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userName = prefs.getString('username');
+    return userName != null;
+  }
 }
