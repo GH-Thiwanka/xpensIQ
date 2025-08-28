@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "878963803359",
+    "project_id": "xpensiq",
+    "storage_bucket": "xpensiq.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878963803359:android:041e5f3bd98045b57d156a",
+        "android_client_info": {
+          "package_name": "com.example.xpensiq"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6vveffUXepNo6RQiVxbabXsBpzzmWenU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
