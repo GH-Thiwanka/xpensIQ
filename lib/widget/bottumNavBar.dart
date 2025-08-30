@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:xpensiq/constants/color.dart';
+import 'package:xpensiq/pages/addIncomePage.dart';
 import 'package:xpensiq/pages/homePage.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -95,7 +96,8 @@ class Screen1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Homepage();
+    //return const Homepage();
+    return const Addincomepage();
   }
 }
 
@@ -115,9 +117,7 @@ class Screen3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Screen 3', style: TextStyle(fontSize: 40))),
-    );
+    return const Addincomepage();
   }
 }
 
