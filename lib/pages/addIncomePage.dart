@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xpensiq/constants/color.dart';
+import 'package:xpensiq/pages/addExpensesForm.dart';
 import 'package:xpensiq/pages/addForm.dart';
 
 class Addincomepage extends StatefulWidget {
@@ -102,8 +103,16 @@ class _AddincomepageState extends State<Addincomepage> {
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.11),
-              Addform(isGreen: _showPageState == 0 ? true : false),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+              Image.asset(
+                _showPageState == 0
+                    ? 'assets/income.png'
+                    : 'assets/expenses.png',
+                width: MediaQuery.of(context).size.width * 0.4,
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              //Addform(isGreen: _showPageState == 0 ? true : false),
+              Addexpensesform(isGreen: _showPageState == 0 ? true : false),
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/models/expensModel.dart';
 import 'package:xpensiq/models/incomeModel.dart';
+import 'package:xpensiq/service/incomeFormService.dart';
 
 class Addform extends StatefulWidget {
   final bool isGreen;
@@ -12,6 +13,20 @@ class Addform extends StatefulWidget {
 }
 
 class _AddformState extends State<Addform> {
+  final TextEditingController _category = TextEditingController();
+  final TextEditingController _title = TextEditingController();
+  final TextEditingController _description = TextEditingController();
+  final TextEditingController _value = TextEditingController();
+
+  @override
+  void dispose() {
+    _category.dispose();
+    _title.dispose();
+    _description.dispose();
+    _value.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Color borderColor = widget.isGreen == true ? kMainColor : kExepenceColor;
@@ -102,6 +117,7 @@ class _AddformState extends State<Addform> {
                     horizontal: kDefultPadding * 2,
                   ),
                   child: TextFormField(
+                    controller: _title,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hint: Text(
@@ -132,6 +148,7 @@ class _AddformState extends State<Addform> {
                     horizontal: kDefultPadding * 2,
                   ),
                   child: TextFormField(
+                    controller: _description,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hint: Text(
@@ -162,6 +179,7 @@ class _AddformState extends State<Addform> {
                     horizontal: kDefultPadding * 2,
                   ),
                   child: TextFormField(
+                    controller: _value,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hint: Text(
@@ -180,6 +198,12 @@ class _AddformState extends State<Addform> {
                     ),
                   ),
                 ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await IncomeFormService();
+                },
+                child: Text('Save', style: TextStyle(fontSize: 24)),
               ),
             ],
           ),

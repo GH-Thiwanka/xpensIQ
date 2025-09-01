@@ -71,6 +71,8 @@ flutter:
     - assets/stcon.png
     - assets/sv.png
     - assets/un.png
+    - assets/income.png
+    - assets/expenses.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

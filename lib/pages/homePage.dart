@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:xpensiq/constants/color.dart';
+import 'package:xpensiq/pages/addExpensesForm.dart';
+import 'package:xpensiq/pages/addForm.dart';
+import 'package:xpensiq/pages/addIncomePage.dart';
 import 'package:xpensiq/pages/registerPage.dart';
 import 'package:xpensiq/service/userService.dart';
 
@@ -11,8 +15,14 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final TextEditingController _taskConraller = TextEditingController();
   //for store username
   String username = '';
+  @override
+  void dispose() {
+    _taskConraller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -30,6 +40,16 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Addincomepage()),
+            );
+          },
+          backgroundColor: kBgMaincolor,
+          child: Icon(Icons.add_rounded, size: 36, color: kSecondaryTextColor),
+        ),
         body: SingleChildScrollView(
           child: Stack(
             children: [

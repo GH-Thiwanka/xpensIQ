@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharedPreferences.getInstance();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const XpensIQ());
@@ -34,6 +35,7 @@ class _XpensIQState extends State<XpensIQ> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(fontFamily: 'Inter'),
+            //darkTheme: ThemeData.dark(),
             home: Wrapper(shawMainScreen: hasUserName),
           );
         }

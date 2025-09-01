@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:xpensiq/constants/color.dart';
+import 'package:xpensiq/pages/addExpensesForm.dart';
 import 'package:xpensiq/pages/addIncomePage.dart';
 import 'package:xpensiq/pages/homePage.dart';
 
@@ -21,7 +22,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   List<Widget> _buildScreens() {
-    return const [Screen1(), Screen2(), Screen3(), Screen4(), Screen5()];
+    return const [Screen1(), Screen2(), Screen4(), Screen5()];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -35,12 +36,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.payments_rounded),
         title: "Transaction",
-        activeColorPrimary: kSecondaryColor,
-        inactiveColorPrimary: kSecondaryTextColor,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.add_rounded),
-        title: 'add',
         activeColorPrimary: kSecondaryColor,
         inactiveColorPrimary: kSecondaryTextColor,
       ),
@@ -96,8 +91,8 @@ class Screen1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //return const Homepage();
-    return const Addincomepage();
+    return const Homepage();
+    //return const Addincomepage();
   }
 }
 
@@ -109,15 +104,6 @@ class Screen2 extends StatelessWidget {
     return const Scaffold(
       body: Center(child: Text('Screen 2', style: TextStyle(fontSize: 40))),
     );
-  }
-}
-
-class Screen3 extends StatelessWidget {
-  const Screen3({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Addincomepage();
   }
 }
 
