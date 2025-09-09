@@ -104,4 +104,32 @@ class IncomeFormService {
       await addExpense(categoryType, description, value);
     }
   }
+
+  //metord to get all the tasks from the firestore collection
+  Stream<List<Incomemodel>> getIncome() {
+    return _incomeCollection.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map(
+            (doc) => Incomemodel.fromJson(
+              doc.data() as Map<String, dynamic>,
+              doc.id,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  //metord to get all the tasks from the firestore collection
+  Stream<List<Expensmodel>> getExpens() {
+    return _expenseCollection.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map(
+            (doc) => Expensmodel.fromJson(
+              doc.data() as Map<String, dynamic>,
+              doc.id,
+            ),
+          )
+          .toList(),
+    );
+  }
 }

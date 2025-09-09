@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 enum IncomeType { Freelance, Salary, Sales }
 
-final Map<IncomeType, String> incomeIncomeTypeImages = {
+/*final Map<IncomeType, String> incomeIncomeTypeImages = {
   IncomeType.Freelance: 'assets/free.png',
   IncomeType.Salary: 'assets/salary.png',
   IncomeType.Sales: 'assets/sale.png',
@@ -13,7 +13,7 @@ final Map<IncomeType, Color> incomeIncomeTypeColor = {
   IncomeType.Freelance: const Color(0xffe57373),
   IncomeType.Salary: const Color(0xff81c784),
   IncomeType.Sales: const Color(0xffffd54f),
-};
+};*/
 
 final Map<String, String> incomeTypeImages = {
   'Freelance': 'assets/free.png',
@@ -22,7 +22,7 @@ final Map<String, String> incomeTypeImages = {
 };
 
 final Map<String, Color> incomeTypeColor = {
-  'Freelance': const Color(0xffe57373),
+  'Freelance': const Color.fromARGB(255, 247, 82, 217),
   'Salary': const Color(0xff81c784),
   'Sales': const Color(0xffffd54f),
 };

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:xpensiq/constants/color.dart';
 
 enum ExpensType { Shopping, Subscriptions, Food, Health, Transport }
 
-final Map<ExpensType, String> expensExpensTypeImage = {
+/*final Map<ExpensType, String> expensExpensTypeImage = {
   ExpensType.Food: 'assets/food.png',
   ExpensType.Health: 'assets/health.png',
   ExpensType.Shopping: 'assets/shopping.png',
@@ -17,7 +18,7 @@ final Map<ExpensType, Color> expensExpensTypeColor = {
   ExpensType.Shopping: Color(0xffe57373),
   ExpensType.Subscriptions: Color(0xffe57373),
   ExpensType.Transport: Color(0xffe57373),
-};
+};*/
 
 // Helper maps for string-based operations
 final Map<String, String> expenseTypeImages = {
@@ -29,11 +30,11 @@ final Map<String, String> expenseTypeImages = {
 };
 
 final Map<String, Color> expenseTypeColors = {
-  'Food': Color(0xffe57373),
+  'Food': Color.fromARGB(255, 109, 226, 224),
   'Health': Color(0xffe57373),
-  'Shopping': Color(0xffe57373),
-  'Subscriptions': Color(0xffe57373),
-  'Transport': Color(0xffe57373),
+  'Shopping': kAlertWarColor,
+  'Subscriptions': Color.fromARGB(255, 179, 239, 15),
+  'Transport': kBlueColor,
 };
 
 class Expensmodel {
@@ -77,7 +78,7 @@ class Expensmodel {
   }
 
   // Helper method to get the corresponding enum (if needed for UI)
-  ExpensType? get expenseTypeEnum {
+  /*ExpensType? get expenseTypeEnum {
     try {
       return ExpensType.values.firstWhere((e) => e.name == Expenstype);
     } catch (e) {
@@ -119,5 +120,5 @@ class ExpenseTypeHelper {
         ),
       );
     }).toList();
-  }
+  }*/
 }

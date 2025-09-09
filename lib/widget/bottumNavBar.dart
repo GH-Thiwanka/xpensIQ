@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:xpensiq/constants/color.dart';
-import 'package:xpensiq/pages/addExpensesForm.dart';
-import 'package:xpensiq/pages/addIncomePage.dart';
+import 'package:xpensiq/pages/budgetPage.dart';
 import 'package:xpensiq/pages/homePage.dart';
+//import 'package:xpensiq/pages/homePage.dart';
+import 'package:xpensiq/pages/profilePage.dart';
+import 'package:xpensiq/pages/transactionPage.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -91,8 +93,8 @@ class Screen1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Homepage();
-    //return const Addincomepage();
+    //return const Homepage();
+    return const Budgetpage();
   }
 }
 
@@ -101,9 +103,7 @@ class Screen2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Screen 2', style: TextStyle(fontSize: 40))),
-    );
+    return Transactionpage();
   }
 }
 
@@ -112,9 +112,7 @@ class Screen4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Screen 4', style: TextStyle(fontSize: 40))),
-    );
+    return const Budgetpage();
   }
 }
 
@@ -123,8 +121,6 @@ class Screen5 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Screen 5', style: TextStyle(fontSize: 40))),
-    );
+    return const Profilepage();
   }
 }
