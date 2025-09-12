@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:xpensiq/constants/color.dart';
+import 'package:xpensiq/models/expensModel.dart';
+import 'package:xpensiq/models/incomeModel.dart';
 import 'package:xpensiq/pages/addExpensesForm.dart';
 import 'package:xpensiq/pages/addForm.dart';
 import 'package:xpensiq/pages/addIncomePage.dart';
 import 'package:xpensiq/pages/registerPage.dart';
 import 'package:xpensiq/service/userService.dart';
+import 'package:xpensiq/widget/recentlyAdd.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -15,6 +18,76 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  Map<String, double> expensTypeTotal = {
+    'Food': 0,
+    'Health': 0,
+    'Shopping': 0,
+    'Subscriptions': 0,
+    'Transport': 0,
+  };
+
+  Map<String, double> incomeTypeTotal = {
+    'Freelance': 0,
+    'Salary': 0,
+    'Sales': 0,
+  };
+
+  Future<void> _fetchData() async {
+    try {
+      setState(() {
+        CircularProgressIndicator();
+      });
+
+      // Fetch expenses
+      QuerySnapshot expenseSnapshot = await FirebaseFirestore.instance
+          .collection('expenses')
+          .get();
+      expensTypeTotal = {
+        'Food': 0,
+        'Health': 0,
+        'Shopping': 0,
+        'Subscriptions': 0,
+        'Transport': 0,
+      };
+      for (var doc in expenseSnapshot.docs) {
+        Expensmodel expense = Expensmodel.fromJson(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+        expensTypeTotal[expense.Expenstype] =
+            (expensTypeTotal[expense.Expenstype] ?? 0) + expense.value;
+      }
+
+      // Fetch incomes
+      QuerySnapshot incomeSnapshot = await FirebaseFirestore.instance
+          .collection('income')
+          .get();
+      incomeTypeTotal = {'Freelance': 0, 'Salary': 0, 'Sales': 0};
+      for (var doc in incomeSnapshot.docs) {
+        Incomemodel income = Incomemodel.fromJson(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+        incomeTypeTotal[income.Incometype] =
+            (incomeTypeTotal[income.Incometype] ?? 0) + income.value;
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    } finally {
+      setState(() {});
+    }
+  }
+
+  // New function to calculate total income
+  double _calculateTotalIncome() {
+    return incomeTypeTotal.values.fold(0.0, (sum, value) => sum + value);
+  }
+
+  // New function to calculate total expenses
+  double _calculateTotalExpenses() {
+    return expensTypeTotal.values.fold(0.0, (sum, value) => sum + value);
+  }
+
   final TextEditingController _taskConraller = TextEditingController();
   //for store username
   String username = '';
@@ -33,6 +106,7 @@ class _HomepageState extends State<Homepage> {
         });
       }
     });
+    _fetchData();
     super.initState();
   }
 
@@ -126,16 +200,15 @@ class _HomepageState extends State<Homepage> {
                           width: MediaQuery.of(context).size.width * 0.45,
                           height: 100,
                           decoration: BoxDecoration(
-                            color: Color(0xff70FF00).withAlpha(100),
+                            color: kMainColor,
                             borderRadius: BorderRadius.circular(30),
-                            border: Border.all(width: 1.5, color: kMainColor),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(kDefultPadding * 1.5),
                             child: Row(
                               children: [
                                 Container(
-                                  width: 60,
+                                  width: 50,
                                   decoration: BoxDecoration(
                                     color: Color(0xff06FFA5).withAlpha(100),
                                     borderRadius: BorderRadius.circular(20),
@@ -149,11 +222,7 @@ class _HomepageState extends State<Homepage> {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: Image.asset(
-                                      'assets/increase.png',
-                                      width: 60,
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: Icon(Icons.wallet, size: 45),
                                   ),
                                 ),
                                 Padding(
@@ -169,15 +238,17 @@ class _HomepageState extends State<Homepage> {
                                         'Income',
                                         style: TextStyle(
                                           color: kCardColor,
-                                          fontSize: 20,
+                                          fontSize: 22,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        '\$5000',
+                                        _calculateTotalIncome().toStringAsFixed(
+                                          2,
+                                        ),
                                         style: TextStyle(
                                           color: kCardColor,
-                                          fontSize: 26,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -192,21 +263,17 @@ class _HomepageState extends State<Homepage> {
                           width: MediaQuery.of(context).size.width * 0.45,
                           height: 100,
                           decoration: BoxDecoration(
-                            color: kExepenceColor.withAlpha(100),
+                            color: kExepenceColor,
                             borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              width: 1.5,
-                              color: kExepenceColor,
-                            ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(kDefultPadding * 1.5),
                             child: Row(
                               children: [
                                 Container(
-                                  width: 60,
+                                  width: 50,
                                   decoration: BoxDecoration(
-                                    color: Color(0xffE56C6C).withAlpha(100),
+                                    color: kAlertWarColor.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(20),
                                     boxShadow: [
                                       BoxShadow(
@@ -218,10 +285,9 @@ class _HomepageState extends State<Homepage> {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: Image.asset(
-                                      'assets/decrease.png',
-                                      width: 60,
-                                      fit: BoxFit.cover,
+                                    child: Icon(
+                                      Icons.money_off_rounded,
+                                      size: 45,
                                     ),
                                   ),
                                 ),
@@ -238,15 +304,16 @@ class _HomepageState extends State<Homepage> {
                                         'Expenses',
                                         style: TextStyle(
                                           color: kCardColor,
-                                          fontSize: 20,
+                                          fontSize: 22,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        '\$5000',
+                                        _calculateTotalExpenses()
+                                            .toStringAsFixed(2),
                                         style: TextStyle(
                                           color: kCardColor,
-                                          fontSize: 26,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -262,6 +329,8 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ],
               ),
+
+              Recentlyadd(),
             ],
           ),
         ),

@@ -32,15 +32,6 @@ class _TransactionpageState extends State<Transactionpage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        /* appBar: AppBar(
-          backgroundColor: kBgMaincolor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.horizontal(
-              right: Radius.circular(20),
-            ),
-          ),
-          title: 
-        ),*/
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(kDefultPadding),

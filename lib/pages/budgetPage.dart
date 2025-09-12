@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xpensiq/constants/color.dart';
+import 'package:xpensiq/widget/pieChart.dart';
 
 class Budgetpage extends StatefulWidget {
   const Budgetpage({super.key});
@@ -9,104 +10,135 @@ class Budgetpage extends StatefulWidget {
 }
 
 class _BudgetpageState extends State<Budgetpage> {
-  bool _showPageState = true;
+  bool _showIncome = true; // true for expenses, false for income
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: _showPageState == false ? kMainColor : kExepenceColor,
-
-        body: Column(
-          children: [
-            Text(
-              'Financial Report',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              textAlign: TextAlign.center,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(kDefultPadding * 2),
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.06,
-                decoration: BoxDecoration(
-                  color: kBorDivColor,
-                  borderRadius: BorderRadius.circular(60),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                      color: Colors.black26,
-                    ),
-                  ],
+        backgroundColor: kBgMaincolor,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(kDefultPadding),
+            child: Column(
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  'Financial Report',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: kMainTextColor,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(kDefultPadding * 0.3),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _showPageState = false;
-                          });
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.435,
-                          decoration: BoxDecoration(
-                            color: _showPageState == true
-                                ? kBorDivColor
-                                : kMainColor,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Income',
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: _showPageState == true
-                                    ? kMainTextColor
-                                    : kBorDivColor,
+                SizedBox(height: 30),
+                // Toggle buttons
+                Container(
+                  width: double.infinity,
+                  height: 55,
+                  decoration: BoxDecoration(
+                    color: kBorDivColor,
+                    borderRadius: BorderRadius.circular(60),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      // Income button
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _showIncome = true;
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: !_showIncome
+                                  ? Colors.transparent
+                                  : kMainColor,
+                              borderRadius: BorderRadius.circular(50),
+                              boxShadow: !_showIncome
+                                  ? null
+                                  : [
+                                      BoxShadow(
+                                        blurRadius: 8,
+                                        offset: Offset(0, 2),
+                                        color: kMainColor.withOpacity(0.3),
+                                      ),
+                                    ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Income',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: !_showIncome
+                                      ? kSecondaryTextColor
+                                      : Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(kDefultPadding * 0.3),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _showPageState = true;
-                          });
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.435,
-                          decoration: BoxDecoration(
-                            color: _showPageState == false
-                                ? kBorDivColor
-                                : kExepenceColor,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Expense',
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: _showPageState == false
-                                    ? kMainTextColor
-                                    : kBorDivColor,
+                      // Expense button
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _showIncome = false;
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: _showIncome
+                                  ? Colors.transparent
+                                  : kExepenceColor,
+                              borderRadius: BorderRadius.circular(50),
+                              boxShadow: _showIncome
+                                  ? null
+                                  : [
+                                      BoxShadow(
+                                        blurRadius: 8,
+                                        offset: Offset(0, 2),
+                                        color: kExepenceColor.withOpacity(0.3),
+                                      ),
+                                    ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Expense',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: _showIncome
+                                      ? kSecondaryTextColor
+                                      : Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+                SizedBox(height: 30),
+                // Pie chart
+                Cards(isIncome: _showIncome),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
