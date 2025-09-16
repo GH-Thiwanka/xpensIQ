@@ -1,4 +1,4 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/models/expensModel.dart';
@@ -130,15 +130,7 @@ class BudgetCalculations {
 class Screen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // You should get these lists from your data source (database, provider, etc.)
-    // For now, using empty lists as placeholders
-    List<Expensmodel> expensesList = [];
-    List<Incomemodel> incomesList = [];
-    //return const Homepage();
-    return Budgetpage(
-      expensTypeTotal: BudgetCalculations.calculateExpensTypes(expensesList),
-      incomeTypeTotal: BudgetCalculations.calculateIncomeTypes(incomesList),
-    );
+    return const Homepage();
   }
 }
 
@@ -160,10 +152,7 @@ class Screen4 extends StatelessWidget {
     // For now, using empty lists as placeholders
     List<Expensmodel> expensesList = [];
     List<Incomemodel> incomesList = [];
-    return Budgetpage(
-      expensTypeTotal: BudgetCalculations.calculateExpensTypes(expensesList),
-      incomeTypeTotal: BudgetCalculations.calculateIncomeTypes(incomesList),
-    );
+    return Budgetpage();
   }
 }
 
@@ -174,8 +163,9 @@ class Screen5 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Profilepage();
   }
-}*/
-import 'package:flutter/material.dart';
+}
+
+/*import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/pages/budgetPage.dart';
@@ -304,4 +294,4 @@ class Screen4 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Profilepage();
   }
-}
+}*/

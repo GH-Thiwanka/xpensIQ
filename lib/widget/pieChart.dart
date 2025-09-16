@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:xpensiq/constants/color.dart';
+import 'package:xpensiq/models/doubleValue.dart';
 import 'package:xpensiq/models/expensModel.dart';
 import 'package:xpensiq/models/incomeModel.dart';
 
@@ -226,7 +227,7 @@ class _CardsState extends State<Cards> {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    '$type: \$${value.toStringAsFixed(2)}',
+                    '$type: L\K\R ${NumberFormatModel.toCompact(value)}',
                     style: TextStyle(color: kMainTextColor, fontSize: 14),
                   ),
                 ],
@@ -257,7 +258,7 @@ class _CardsState extends State<Cards> {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    '$type: \$${value.toStringAsFixed(2)}',
+                    '$type: L\K\R ${NumberFormatModel.toCompact(value)}',
                     style: TextStyle(color: kMainTextColor, fontSize: 14),
                   ),
                 ],
@@ -360,7 +361,7 @@ class _CardsState extends State<Cards> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'of \$${totalValue.toStringAsFixed(2)}',
+                    'of L\K\R ${NumberFormatModel.toCompact(totalValue)}',
                     style: TextStyle(
                       color: kSecondaryTextColor,
                       fontWeight: FontWeight.w500,

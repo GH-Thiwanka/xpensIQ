@@ -125,212 +125,246 @@ class _HomepageState extends State<Homepage> {
           child: Icon(Icons.add_rounded, size: 36, color: kSecondaryTextColor),
         ),
         body: SingleChildScrollView(
-          child: Stack(
+          child: Column(
             children: [
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.3,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [kBgMaincolor, Color(0xFFB2DFDB)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(50),
-                  ),
-                ),
-              ),
-              Column(
+              Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 0),
-                          child: Container(
-                            width: 55,
-                            height: 55,
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 3, color: kMainColor),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(55),
-                              child: Image.asset(
-                                'assets/increase.png',
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [kBgMaincolor, Color(0xFFB2DFDB)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(50),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 0),
+                              child: Container(
                                 width: 55,
                                 height: 55,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 3,
+                                    color: kMainColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(55),
+                                  child: Image.asset(
+                                    'assets/increase.png',
+                                    width: 55,
+                                    height: 55,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.65,
-                          child: Text(
-                            'Welcome $username',
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.notifications_rounded,
-                            color: kSecondaryColor,
-                            size: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kDefultPadding * 1.5,
-                      vertical: kDefultPadding * 2.5,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: kMainColor,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(kDefultPadding * 1.5),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff06FFA5).withAlpha(100),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 10,
-                                        color: Colors.black12,
-                                        offset: Offset(4, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Icon(Icons.wallet, size: 45),
-                                  ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.65,
+                              child: Text(
+                                'Welcome $username',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: kDefultPadding,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Income',
-                                        style: TextStyle(
-                                          color: kCardColor,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        _calculateTotalIncome().toStringAsFixed(
-                                          2,
-                                        ),
-                                        style: TextStyle(
-                                          color: kCardColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.notifications_rounded,
+                                color: kSecondaryColor,
+                                size: 30,
+                              ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: kExepenceColor,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(kDefultPadding * 1.5),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: kAlertWarColor.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 10,
-                                        color: Colors.black12,
-                                        offset: Offset(4, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Icon(
-                                      Icons.money_off_rounded,
-                                      size: 45,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kDefultPadding * 1.5,
+                          vertical: kDefultPadding * 2.5,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              height: MediaQuery.of(context).size.width * 0.27,
+                              decoration: BoxDecoration(
+                                color: kMainColor,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  kDefultPadding * 1.5,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            Container(
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                color: Color(
+                                                  0xff06FFA5,
+                                                ).withAlpha(100),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 10,
+                                                    color: Colors.black12,
+                                                    offset: Offset(4, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Icon(
+                                                  Icons.trending_up_rounded,
+                                                  size: 45,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              0.015,
+                                        ),
+                                        Text(
+                                          'Income',
+                                          style: TextStyle(
+                                            color: kCardColor,
+                                            fontSize: 26,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: kDefultPadding,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Expenses',
-                                        style: TextStyle(
-                                          color: kCardColor,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                          0.025,
+                                    ),
+                                    Text(
+                                      'LKR ${_calculateTotalIncome().toStringAsFixed(2)}',
+                                      style: TextStyle(
+                                        color: kCardColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      Text(
-                                        _calculateTotalExpenses()
-                                            .toStringAsFixed(2),
-                                        style: TextStyle(
-                                          color: kCardColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              height: MediaQuery.of(context).size.width * 0.27,
+                              decoration: BoxDecoration(
+                                color: kExepenceColor,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  kDefultPadding * 1.5,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            color: kAlertWarColor.withOpacity(
+                                              0.5,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                blurRadius: 10,
+                                                color: Colors.black12,
+                                                offset: Offset(4, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            child: Icon(
+                                              Icons.trending_down_rounded,
+                                              size: 45,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              0.015,
+                                        ),
+                                        Text(
+                                          'Expense',
+                                          style: TextStyle(
+                                            color: kCardColor,
+                                            fontSize: 26,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                          0.025,
+                                    ),
+                                    Text(
+                                      'LKR ${_calculateTotalExpenses().toStringAsFixed(2)}',
+                                      style: TextStyle(
+                                        color: kCardColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-
-              Recentlyadd(),
+              RecentTransactionsList(),
             ],
           ),
         ),

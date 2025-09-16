@@ -16,7 +16,7 @@ class _AddincomepageState extends State<Addincomepage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: _showPageState == 0 ? kMainColor : kExepenceColor,
+        backgroundColor: Colors.grey[50],
         body: SingleChildScrollView(
           child: Column(
             children: [
