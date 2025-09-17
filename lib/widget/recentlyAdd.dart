@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:xpensiq/models/doubleValue.dart';
 import 'package:xpensiq/models/expensModel.dart';
 import 'package:xpensiq/models/incomeModel.dart';
 
@@ -144,7 +145,7 @@ class RecentTransactionsList extends StatelessWidget {
         transactions.sort((a, b) => b.date.compareTo(a.date));
 
         // Limit to recent 20 transactions
-        return transactions.take(20).toList();
+        return transactions.take(10).toList();
       } catch (e) {
         print('Error fetching transactions: $e');
         return <TransactionItem>[];
@@ -248,7 +249,7 @@ class TransactionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              '${isIncome ? '+' : '-'}\$${transaction.value.toStringAsFixed(2)}',
+              '${isIncome ? '+' : '-'}${NumberFormatModel.toLKRFormatted(transaction.value)}',
               style: TextStyle(
                 color: isIncome ? Colors.green : Colors.red,
                 fontWeight: FontWeight.bold,

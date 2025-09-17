@@ -16,7 +16,7 @@ class _BudgetpageState extends State<Budgetpage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: kBgMaincolor,
+        backgroundColor: kBgMaincolor.withOpacity(0.3),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(kDefultPadding),

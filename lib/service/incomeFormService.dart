@@ -27,7 +27,7 @@ class IncomeFormService {
       // Create a new income record
       final income = Incomemodel(
         id: '', // Firestore will auto-generate the ID
-        Incometype: incomeType,
+        Incometype: incomeTypeString,
         description: description,
         value: value,
         date: DateTime.now(),
@@ -67,7 +67,7 @@ class IncomeFormService {
       // Create a new expense record
       final expense = Expensmodel(
         id: '', // Firestore will auto-generate the ID
-        Expenstype: expenseType,
+        Expenstype: expenseTypeString,
         description: description,
         value: value,
         date: DateTime.now(),
@@ -90,6 +90,72 @@ class IncomeFormService {
     }
   }
 
+  // Method to update income
+  Future<void> updateIncome(
+    String id,
+    String incomeType,
+    String description,
+    double value,
+  ) async {
+    try {
+      await _incomeCollection.doc(id).update({
+        'Incometype': incomeType,
+        'description': description,
+        'value': value,
+        'time': Timestamp.fromDate(DateTime.now()), // Update the time
+      });
+
+      print('Income updated successfully with ID: $id');
+    } catch (error) {
+      print('Error updating income: $error');
+      rethrow;
+    }
+  }
+
+  // Method to update expense
+  Future<void> updateExpense(
+    String id,
+    String expenseType,
+    String description,
+    double value,
+  ) async {
+    try {
+      await _expenseCollection.doc(id).update({
+        'Expenstype': expenseType,
+        'description': description,
+        'value': value,
+        'time': Timestamp.fromDate(DateTime.now()), // Update the time
+      });
+
+      print('Expense updated successfully with ID: $id');
+    } catch (error) {
+      print('Error updating expense: $error');
+      rethrow;
+    }
+  }
+
+  // Method to delete income
+  Future<void> deleteIncome(String id) async {
+    try {
+      await _incomeCollection.doc(id).delete();
+      print('Income deleted successfully with ID: $id');
+    } catch (error) {
+      print('Error deleting income: $error');
+      rethrow;
+    }
+  }
+
+  // Method to delete expense
+  Future<void> deleteExpense(String id) async {
+    try {
+      await _expenseCollection.doc(id).delete();
+      print('Expense deleted successfully with ID: $id');
+    } catch (error) {
+      print('Error deleting expense: $error');
+      rethrow;
+    }
+  }
+
   // Universal method that can handle both income and expense
   Future<void> addTransaction(
     bool isIncome,
@@ -105,7 +171,7 @@ class IncomeFormService {
     }
   }
 
-  //metord to get all the tasks from the firestore collection
+  // Method to get all the income from the firestore collection
   Stream<List<Incomemodel>> getIncome() {
     return _incomeCollection.snapshots().map(
       (snapshot) => snapshot.docs
@@ -119,7 +185,7 @@ class IncomeFormService {
     );
   }
 
-  //metord to get all the tasks from the firestore collection
+  // Method to get all the expenses from the firestore collection
   Stream<List<Expensmodel>> getExpens() {
     return _expenseCollection.snapshots().map(
       (snapshot) => snapshot.docs
@@ -131,5 +197,33 @@ class IncomeFormService {
           )
           .toList(),
     );
+  }
+
+  // Method to get single income by ID
+  Future<Incomemodel?> getIncomeById(String id) async {
+    try {
+      DocumentSnapshot doc = await _incomeCollection.doc(id).get();
+      if (doc.exists) {
+        return Incomemodel.fromJson(doc.data() as Map<String, dynamic>, doc.id);
+      }
+      return null;
+    } catch (error) {
+      print('Error getting income by ID: $error');
+      rethrow;
+    }
+  }
+
+  // Method to get single expense by ID
+  Future<Expensmodel?> getExpenseById(String id) async {
+    try {
+      DocumentSnapshot doc = await _expenseCollection.doc(id).get();
+      if (doc.exists) {
+        return Expensmodel.fromJson(doc.data() as Map<String, dynamic>, doc.id);
+      }
+      return null;
+    } catch (error) {
+      print('Error getting expense by ID: $error');
+      rethrow;
+    }
   }
 }

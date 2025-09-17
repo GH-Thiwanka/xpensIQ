@@ -23,22 +23,11 @@ class XpensIQ extends StatefulWidget {
 class _XpensIQState extends State<XpensIQ> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Userservice.checkUserName(),
-      builder: (context, snapshot) {
-        //if the snapshot is still waiting
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else {
-          bool hasUserName = snapshot.data ?? false;
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(fontFamily: 'Inter'),
-            //darkTheme: ThemeData.dark(),
-            home: Wrapper(shawMainScreen: hasUserName),
-          );
-        }
-      },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Inter'),
+      // Always show splash screen first
+      home: const SplachScreen(),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/pages/addExpensesForm.dart';
-import 'package:xpensiq/pages/addForm.dart';
 
 class Addincomepage extends StatefulWidget {
   const Addincomepage({super.key});
