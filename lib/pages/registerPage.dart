@@ -3,6 +3,7 @@ import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/pages/homePage.dart';
 import 'package:xpensiq/pages/loginPage.dart';
 import 'package:xpensiq/service/userService.dart';
+import 'package:xpensiq/widget/bottumNavBar.dart';
 
 class Registerpage extends StatefulWidget {
   const Registerpage({super.key});
@@ -56,9 +57,44 @@ class _RegisterpageState extends State<Registerpage> {
       );
 
       if (success && context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Homepage()),
+        // Get the current user ID after successful registration
+        // This matches the pattern used in your HomePage
+        String? userId = Userservice.getCurrentUserId();
+
+        if (userId != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNavBar(userId: userId),
+            ),
+          );
+        } else {
+          // Handle case where userId is null
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Registration successful but unable to get user ID. Please login again.',
+                ),
+                backgroundColor: Colors.orange,
+              ),
+            );
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      // Handle error
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration failed: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {

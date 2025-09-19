@@ -515,8 +515,19 @@ class _TransactionpageState extends State<Transactionpage> {
                       );
                     } else {
                       final List<Incomemodel> incomeList = snapshot.data!;
+
+                      // Calculate dynamic height
+                      double cardHeight =
+                          MediaQuery.of(context).size.height *
+                          0.15; // Approximate height of each card
+                      double calculatedHeight = incomeList.length * cardHeight;
+                      double maxHeight =
+                          MediaQuery.of(context).size.height * 0.45;
+                      double dynamicHeight = calculatedHeight > maxHeight
+                          ? maxHeight
+                          : calculatedHeight;
                       return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.48,
+                        height: dynamicHeight,
                         child: ListView.builder(
                           itemCount: incomeList.length,
                           itemBuilder: (context, index) {
@@ -561,8 +572,20 @@ class _TransactionpageState extends State<Transactionpage> {
                       );
                     } else {
                       final List<Expensmodel> expensesList = snapshot.data!;
+
+                      // Calculate dynamic height
+                      double cardHeight =
+                          MediaQuery.of(context).size.height *
+                          0.15; // Approximate height of each card
+                      double calculatedHeight =
+                          expensesList.length * cardHeight;
+                      double maxHeight =
+                          MediaQuery.of(context).size.height * 0.45;
+                      double dynamicHeight = calculatedHeight > maxHeight
+                          ? maxHeight
+                          : calculatedHeight;
                       return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.48,
+                        height: dynamicHeight,
                         child: ListView.builder(
                           itemCount: expensesList.length,
                           itemBuilder: (context, index) {
