@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xpensiq/constants/color.dart';
-import 'package:xpensiq/pages/homePage.dart';
 import 'package:xpensiq/pages/registerPage.dart';
 import 'package:xpensiq/service/userService.dart';
 import 'package:xpensiq/widget/bottumNavBar.dart';
@@ -119,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
       String email = _email.text.trim();
       String password = _password.text;
 
+      // Use existing signInUser method
       bool success = await Userservice.signInUser(
         email: email,
         password: password,
@@ -131,14 +131,18 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       if (success) {
+        // Get current user ID after successful login
+        String? userId = Userservice.getCurrentUserId();
         // Save credentials if remember me is checked
         await _saveCredentials();
 
-        // Navigate to home page
-        if (mounted) {
+        // Navigate to home page with userId
+        if (userId != null && mounted) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const BottomNavBar()),
+            MaterialPageRoute(
+              builder: (context) => BottomNavBar(userId: userId),
+            ),
           );
 
           // Show success message

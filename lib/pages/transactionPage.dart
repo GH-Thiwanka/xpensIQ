@@ -7,7 +7,8 @@ import 'package:xpensiq/models/incomeModel.dart';
 import 'package:xpensiq/service/incomeFormService.dart';
 
 class Transactionpage extends StatefulWidget {
-  const Transactionpage({super.key});
+  final String userId;
+  const Transactionpage({required this.userId, super.key});
 
   @override
   State<Transactionpage> createState() => _TransactionpageState();
@@ -237,7 +238,7 @@ class _TransactionpageState extends State<Transactionpage> {
   }
 
   // Method to show delete confirmation dialog
-  void _showDeleteDialog(String id, bool isIncome, String type) {
+  void _showDeleteDialog(String id, bool isIncome) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -296,7 +297,6 @@ class _TransactionpageState extends State<Transactionpage> {
   }) {
     return Card(
       elevation: 2,
-
       child: ListTile(
         subtitle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -431,13 +431,7 @@ class _TransactionpageState extends State<Transactionpage> {
                 IconButton(
                   icon: Icon(Icons.delete, color: Colors.red, size: 20),
                   onPressed: () {
-                    _showDeleteDialog(
-                      transaction.id,
-                      isIncome,
-                      isIncome
-                          ? transaction.Incometype
-                          : transaction.Expenstype,
-                    );
+                    _showDeleteDialog(transaction.id, isIncome);
                   },
                   constraints: BoxConstraints(
                     minWidth: kDefultPadding,
@@ -504,7 +498,7 @@ class _TransactionpageState extends State<Transactionpage> {
                 ),
                 SizedBox(height: 10),
                 StreamBuilder(
-                  stream: _service.getIncome(),
+                  stream: _service.getIncome(widget.userId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -522,9 +516,7 @@ class _TransactionpageState extends State<Transactionpage> {
                     } else {
                       final List<Incomemodel> incomeList = snapshot.data!;
                       return SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height *
-                            0.48, // Reduced height to accommodate buttons
+                        height: MediaQuery.of(context).size.height * 0.48,
                         child: ListView.builder(
                           itemCount: incomeList.length,
                           itemBuilder: (context, index) {
@@ -550,7 +542,7 @@ class _TransactionpageState extends State<Transactionpage> {
                   ),
                 ),
                 StreamBuilder(
-                  stream: _service.getExpens(),
+                  stream: _service.getExpens(widget.userId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -570,9 +562,7 @@ class _TransactionpageState extends State<Transactionpage> {
                     } else {
                       final List<Expensmodel> expensesList = snapshot.data!;
                       return SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height *
-                            0.48, // Reduced height to accommodate buttons
+                        height: MediaQuery.of(context).size.height * 0.48,
                         child: ListView.builder(
                           itemCount: expensesList.length,
                           itemBuilder: (context, index) {

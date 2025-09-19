@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:xpensiq/models/incomeModel.dart';
 import 'package:xpensiq/models/expensModel.dart';
 
@@ -12,6 +11,7 @@ class IncomeFormService {
 
   // Method to add income to Firestore
   Future<void> addIncome(
+    String userId,
     dynamic incomeType,
     String description,
     double value,
@@ -27,6 +27,7 @@ class IncomeFormService {
       // Create a new income record
       final income = Incomemodel(
         id: '', // Firestore will auto-generate the ID
+        userId: userId,
         Incometype: incomeTypeString,
         description: description,
         value: value,
@@ -52,6 +53,7 @@ class IncomeFormService {
 
   // Method to add expense to Firestore
   Future<void> addExpense(
+    String userId,
     dynamic expenseType,
     String description,
     double value,
@@ -67,6 +69,7 @@ class IncomeFormService {
       // Create a new expense record
       final expense = Expensmodel(
         id: '', // Firestore will auto-generate the ID
+        userId: userId,
         Expenstype: expenseTypeString,
         description: description,
         value: value,
@@ -158,45 +161,51 @@ class IncomeFormService {
 
   // Universal method that can handle both income and expense
   Future<void> addTransaction(
+    String userId,
     bool isIncome,
     dynamic categoryType,
-    String title,
     String description,
     double value,
   ) async {
     if (isIncome) {
-      await addIncome(categoryType, description, value);
+      await addIncome(userId, categoryType, description, value);
     } else {
-      await addExpense(categoryType, description, value);
+      await addExpense(userId, categoryType, description, value);
     }
   }
 
-  // Method to get all the income from the firestore collection
-  Stream<List<Incomemodel>> getIncome() {
-    return _incomeCollection.snapshots().map(
-      (snapshot) => snapshot.docs
-          .map(
-            (doc) => Incomemodel.fromJson(
-              doc.data() as Map<String, dynamic>,
-              doc.id,
-            ),
-          )
-          .toList(),
-    );
+  // Method to get all the income for a specific user
+  Stream<List<Incomemodel>> getIncome(String userId) {
+    return _incomeCollection
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Incomemodel.fromJson(
+                  doc.data() as Map<String, dynamic>,
+                  doc.id,
+                ),
+              )
+              .toList(),
+        );
   }
 
-  // Method to get all the expenses from the firestore collection
-  Stream<List<Expensmodel>> getExpens() {
-    return _expenseCollection.snapshots().map(
-      (snapshot) => snapshot.docs
-          .map(
-            (doc) => Expensmodel.fromJson(
-              doc.data() as Map<String, dynamic>,
-              doc.id,
-            ),
-          )
-          .toList(),
-    );
+  // Method to get all the expenses for a specific user
+  Stream<List<Expensmodel>> getExpens(String userId) {
+    return _expenseCollection
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Expensmodel.fromJson(
+                  doc.data() as Map<String, dynamic>,
+                  doc.id,
+                ),
+              )
+              .toList(),
+        );
   }
 
   // Method to get single income by ID

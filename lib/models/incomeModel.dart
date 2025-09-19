@@ -17,6 +17,7 @@ final Map<String, Color> incomeTypeColor = {
 
 class Incomemodel {
   final String id;
+  final String userId;
   final String Incometype;
   final String description;
   final double value;
@@ -25,6 +26,7 @@ class Incomemodel {
 
   Incomemodel({
     required this.id,
+    required this.userId,
     required this.Incometype,
     required this.description,
     required this.value,
@@ -35,6 +37,7 @@ class Incomemodel {
   factory Incomemodel.fromJson(Map<String, dynamic> doc, String id) {
     return Incomemodel(
       id: id,
+      userId: doc['userId'] ?? '',
       Incometype: doc['Incometype'] ?? 'Sales',
       description: doc['description'] ?? '',
       value: (doc['value'] ?? 0).toDouble(),
@@ -46,11 +49,12 @@ class Incomemodel {
   // Convert the income model to a Firebase document
   Map<String, dynamic> toJson() {
     return {
-      'Incometype': Incometype, // Convert enum to string
+      'userId': userId,
+      'Incometype': Incometype,
       'description': description,
       'value': value,
-      'date': Timestamp.fromDate(date), // Convert DateTime to Timestamp
-      'time': Timestamp.fromDate(time), // Convert DateTime to Timestamp
+      'date': Timestamp.fromDate(date),
+      'time': Timestamp.fromDate(time),
     };
   }
 }

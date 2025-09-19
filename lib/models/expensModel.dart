@@ -23,7 +23,8 @@ final Map<String, Color> expenseTypeColors = {
 
 class Expensmodel {
   final String id;
-  final String Expenstype; // Changed from ExpensType enum to String
+  final String userId;
+  final String Expenstype;
   final String description;
   final double value;
   final DateTime date;
@@ -31,6 +32,7 @@ class Expensmodel {
 
   Expensmodel({
     required this.id,
+    required this.userId,
     required this.Expenstype,
     required this.description,
     required this.value,
@@ -41,8 +43,8 @@ class Expensmodel {
   factory Expensmodel.fromJson(Map<String, dynamic> doc, String id) {
     return Expensmodel(
       id: id,
-      Expenstype:
-          doc['Expenstype'] ?? 'Food', // Direct string assignment with fallback
+      userId: doc['userId'] ?? '',
+      Expenstype: doc['Expenstype'] ?? 'Food',
       description: doc['description'] ?? '',
       value: (doc['value'] ?? 0).toDouble(),
       date: (doc['date'] as Timestamp).toDate(),
@@ -53,7 +55,8 @@ class Expensmodel {
   // Convert the expense model to a Firebase document
   Map<String, dynamic> toJson() {
     return {
-      'Expenstype': Expenstype, // Already a string
+      'userId': userId,
+      'Expenstype': Expenstype,
       'description': description,
       'value': value,
       'date': Timestamp.fromDate(date),

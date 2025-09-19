@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xpensiq/screens/splach_screen.dart';
-import 'package:xpensiq/service/userService.dart';
-import 'package:xpensiq/widget/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 

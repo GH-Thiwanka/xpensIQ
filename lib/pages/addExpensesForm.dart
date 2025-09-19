@@ -6,54 +6,142 @@ import 'package:xpensiq/service/incomeFormService.dart';
 
 class Addexpensesform extends StatefulWidget {
   final bool isGreen;
-  const Addexpensesform({super.key, required this.isGreen});
+  final String userId;
+
+  const Addexpensesform({
+    super.key,
+    required this.isGreen,
+    required this.userId,
+  });
 
   @override
   State<Addexpensesform> createState() => _AddexpensesformState();
 }
 
 class _AddexpensesformState extends State<Addexpensesform> {
-  final _formKey = GlobalKey<FormState>(); // Added a GlobalKey for the Form
-  final TextEditingController _title =
-      TextEditingController(); // Added Title Controller
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _description = TextEditingController();
   final TextEditingController _value = TextEditingController();
 
-  // State variables to act as "controllers" for dropdown values
+  // State variables for dropdown values
   IncomeType? _selectedIncomeCategory;
   ExpensType? _selectedExpenseCategory;
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    _title.dispose();
     _description.dispose();
     _value.dispose();
     super.dispose();
   }
 
-  // Method to get the selected category as a string
-  String getSelectedCategory() {
-    if (widget.isGreen) {
-      return _selectedIncomeCategory?.name ?? '';
-    } else {
-      return _selectedExpenseCategory?.name ?? '';
+  // Helper method to convert enum to string
+  String _getEnumString(dynamic enumValue) {
+    if (enumValue == null) return '';
+    return enumValue.toString().split('.').last;
+  }
+
+  // Method to validate form and submit
+  Future<void> _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
+
+    // Check if category is selected
+    if ((widget.isGreen && _selectedIncomeCategory == null) ||
+        (!widget.isGreen && _selectedExpenseCategory == null)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a category'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      if (widget.isGreen) {
+        // Add income - convert enum to string for your service
+        await IncomeFormService().addIncome(
+          widget.userId,
+          _getEnumString(_selectedIncomeCategory),
+          _description.text.trim(),
+          double.parse(_value.text.trim()),
+        );
+      } else {
+        // Add expense - convert enum to string for your service
+        await IncomeFormService().addExpense(
+          widget.userId,
+          _getEnumString(_selectedExpenseCategory),
+          _description.text.trim(),
+          double.parse(_value.text.trim()),
+        );
+      }
+
+      // Clear form after successful submission
+      _clearForm();
+
+      // Show success message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              widget.isGreen
+                  ? 'Income added successfully!'
+                  : 'Expense added successfully!',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  // Method to clear form
+  void _clearForm() {
+    setState(() {
+      _selectedIncomeCategory = null;
+      _selectedExpenseCategory = null;
+    });
+    _description.clear();
+    _value.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    Color kMainTextColor = widget.isGreen == true ? kMainColor : kExepenceColor;
+    Color kMainTextColor = widget.isGreen ? kMainColor : kExepenceColor;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kDefultPadding * 2.5),
       child: Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.4,
         decoration: BoxDecoration(
-          color: widget.isGreen == true ? kBgMaincolor : Color(0xFFE6C8C8),
+          color: widget.isGreen ? kBgMaincolor : const Color(0xFFE6C8C8),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Form(
-          key: _formKey, // Assigned the GlobalKey
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: kDefultPadding * 1.5,
@@ -80,20 +168,20 @@ class _AddexpensesformState extends State<Addexpensesform> {
                         ? DropdownButtonFormField<IncomeType>(
                             value: _selectedIncomeCategory,
                             hint: Text(
-                              'Category',
+                              'Select Income Category',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: kMainTextColor.withAlpha(100),
                               ),
                             ),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                             ),
-                            items: IncomeType.values.map((Type) {
+                            items: IncomeType.values.map((type) {
                               return DropdownMenuItem<IncomeType>(
-                                value: Type,
+                                value: type,
                                 child: Text(
-                                  Type.name,
+                                  type.toString().split('.').last,
                                   style: TextStyle(
                                     color: kMainTextColor,
                                     fontSize: 18,
@@ -108,7 +196,7 @@ class _AddexpensesformState extends State<Addexpensesform> {
                             },
                             validator: (IncomeType? value) {
                               if (value == null) {
-                                return 'Please select a category';
+                                return 'Please select an income category';
                               }
                               return null;
                             },
@@ -116,20 +204,20 @@ class _AddexpensesformState extends State<Addexpensesform> {
                         : DropdownButtonFormField<ExpensType>(
                             value: _selectedExpenseCategory,
                             hint: Text(
-                              'Category',
+                              'Select Expense Category',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: kMainTextColor.withAlpha(100),
                               ),
                             ),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                             ),
-                            items: ExpensType.values.map((Type) {
+                            items: ExpensType.values.map((type) {
                               return DropdownMenuItem<ExpensType>(
-                                value: Type,
+                                value: type,
                                 child: Text(
-                                  Type.name,
+                                  type.toString().split('.').last,
                                   style: TextStyle(
                                     color: kMainTextColor,
                                     fontSize: 18,
@@ -144,14 +232,14 @@ class _AddexpensesformState extends State<Addexpensesform> {
                             },
                             validator: (ExpensType? value) {
                               if (value == null) {
-                                return 'Please select a category';
+                                return 'Please select an expense category';
                               }
                               return null;
                             },
                           ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 // Description TextFormField
                 Container(
@@ -169,8 +257,9 @@ class _AddexpensesformState extends State<Addexpensesform> {
                     ),
                     child: TextFormField(
                       controller: _description,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        hintText: 'Description',
+                        hintText: 'Enter description',
                         hintStyle: TextStyle(
                           color: kMainTextColor.withOpacity(0.7),
                           fontSize: 18,
@@ -178,15 +267,18 @@ class _AddexpensesformState extends State<Addexpensesform> {
                         border: InputBorder.none,
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.trim().isEmpty) {
                           return 'Please enter a description';
+                        }
+                        if (value.trim().length < 3) {
+                          return 'Description must be at least 3 characters';
                         }
                         return null;
                       },
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 // Value TextFormField
                 Container(
@@ -204,9 +296,12 @@ class _AddexpensesformState extends State<Addexpensesform> {
                     ),
                     child: TextFormField(
                       controller: _value,
-                      keyboardType: TextInputType.number,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
-                        hintText: 'Value',
+                        hintText: 'Enter amount',
                         hintStyle: TextStyle(
                           color: kMainTextColor.withOpacity(0.7),
                           fontSize: 18,
@@ -214,124 +309,64 @@ class _AddexpensesformState extends State<Addexpensesform> {
                         border: InputBorder.none,
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a value';
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter an amount';
                         }
-                        if (double.tryParse(value) == null) {
+
+                        final parsedValue = double.tryParse(value.trim());
+                        if (parsedValue == null) {
                           return 'Please enter a valid number';
                         }
+
+                        if (parsedValue <= 0) {
+                          return 'Amount must be greater than 0';
+                        }
+
+                        if (parsedValue > 999999999) {
+                          return 'Amount is too large';
+                        }
+
                         return null;
                       },
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-                widget.isGreen
-                    ? TextButton(
-                        onPressed: () async {
-                          // Validate that category is selected
-                          if (getSelectedCategory().isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Please select a category'),
-                              ),
-                            );
-                            return;
-                          }
-
-                          // Validate other fields
-                          if (_description.text.isEmpty ||
-                              _value.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Please fill all fields')),
-                            );
-                            return;
-                          }
-
-                          try {
-                            await IncomeFormService().addIncome(
-                              getSelectedCategory(), // Using the selected category
-                              _description.text,
-                              double.parse(_value.text),
-                            );
-
-                            // Clear form after successful submission
-                            setState(() {
-                              _selectedIncomeCategory = null;
-                              _selectedExpenseCategory = null;
-                            });
-                            _title.clear();
-                            _description.clear();
-                            _value.clear();
-
-                            // Show success message
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Successfully saved!')),
-                            );
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error: ${e.toString()}')),
-                            );
-                          }
-                        },
-                        child: Text('Save', style: TextStyle(fontSize: 24)),
-                      )
-                    : TextButton(
-                        onPressed: () async {
-                          // Validate that category is selected
-                          if (getSelectedCategory().isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Please select a category'),
-                              ),
-                            );
-                            return;
-                          }
-
-                          // Validate other fields
-                          if (_description.text.isEmpty ||
-                              _value.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Please fill all fields')),
-                            );
-                            return;
-                          }
-
-                          try {
-                            await IncomeFormService().addExpense(
-                              getSelectedCategory(), // Using the selected category
-                              _description.text,
-                              double.parse(_value.text),
-                            );
-
-                            // Clear form after successful submission
-                            setState(() {
-                              _selectedIncomeCategory = null;
-                              _selectedExpenseCategory = null;
-                            });
-                            _title.clear();
-                            _description.clear();
-                            _value.clear();
-
-                            // Show success message
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Successfully saved!')),
-                            );
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error: ${e.toString()}')),
-                            );
-                          }
-                        },
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                            fontSize: 24,
-                            //color: widget.isGreen ? kMainColor : kExepenceColor,
-                          ),
-                        ),
+                // Save Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: widget.isGreen
+                          ? kMainColor
+                          : kExepenceColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      elevation: 0,
+                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            'Save ${widget.isGreen ? "Income" : "Expense"}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                  ),
+                ),
               ],
             ),
           ),

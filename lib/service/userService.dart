@@ -86,6 +86,10 @@ class Userservice {
     }
   }
 
+  static String? getCurrentUserId() {
+    return _auth.currentUser?.uid;
+  }
+
   // Sign in user with Firebase
   static Future<bool> signInUser({
     required String email,

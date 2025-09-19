@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/models/doubleValue.dart';
 import 'package:xpensiq/models/expensModel.dart';
@@ -34,6 +35,11 @@ class _CardsState extends State<Cards> {
   StreamSubscription? _expenseSubscription;
   StreamSubscription? _incomeSubscription;
 
+  // Get current user ID
+  String? get _currentUserId {
+    return FirebaseAuth.instance.currentUser?.uid;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,13 +54,22 @@ class _CardsState extends State<Cards> {
   }
 
   void _fetchData() {
+    final userId = _currentUserId;
+    if (userId == null) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
     setState(() {
       isLoading = true;
     });
 
-    // Listen to expense changes in real-time
+    // Listen to user's expense changes in real-time
     _expenseSubscription = FirebaseFirestore.instance
         .collection('expenses')
+        .where('userId', isEqualTo: userId) // Filter by userId
         .snapshots()
         .listen(
           (QuerySnapshot snapshot) {
@@ -93,9 +108,10 @@ class _CardsState extends State<Cards> {
           },
         );
 
-    // Listen to income changes in real-time
+    // Listen to user's income changes in real-time
     _incomeSubscription = FirebaseFirestore.instance
-        .collection('income') // Note: Assuming the collection name is 'income'
+        .collection('income')
+        .where('userId', isEqualTo: userId) // Filter by userId
         .snapshots()
         .listen(
           (QuerySnapshot snapshot) {
@@ -284,6 +300,36 @@ class _CardsState extends State<Cards> {
         child: Center(child: CircularProgressIndicator(color: kSecondaryColor)),
       );
     }
+
+    // Check if user is authenticated
+    if (_currentUserId == null) {
+      return Container(
+        height: 400,
+        padding: EdgeInsets.all(kDefultPadding),
+        decoration: BoxDecoration(
+          color: kCardColor,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.person_outline, size: 64, color: kSecondaryTextColor),
+              SizedBox(height: 16),
+              Text(
+                'Please log in to view data',
+                style: TextStyle(
+                  color: kSecondaryTextColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     double totalValue = getTotalValue();
     List<PieChartSectionData> chartSections = getCharts();
 

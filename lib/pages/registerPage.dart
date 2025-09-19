@@ -3,7 +3,6 @@ import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/pages/homePage.dart';
 import 'package:xpensiq/pages/loginPage.dart';
 import 'package:xpensiq/service/userService.dart';
-import 'package:xpensiq/widget/button.dart';
 
 class Registerpage extends StatefulWidget {
   const Registerpage({super.key});
@@ -294,7 +293,6 @@ class _RegisterpageState extends State<Registerpage> {
                     ),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Row(
                   children: [
                     Text(
@@ -337,7 +335,7 @@ class _RegisterpageState extends State<Registerpage> {
                               ),
                             )
                           : const Text(
-                              'Next',
+                              'Sign Up',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,

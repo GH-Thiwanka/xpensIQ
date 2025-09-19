@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/pages/addExpensesForm.dart';
@@ -13,6 +14,15 @@ class _AddincomepageState extends State<Addincomepage> {
   int _showPageState = 0;
   @override
   Widget build(BuildContext context) {
+    // Get the current user from Firebase Auth
+    final user = FirebaseAuth.instance.currentUser;
+
+    // Check if the user is logged in
+    if (user == null) {
+      // You can return a different widget here, like a login screen or a loading indicator
+      return Center(child: Text('Please log in to add transactions.'));
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[50],
@@ -110,8 +120,8 @@ class _AddincomepageState extends State<Addincomepage> {
                 width: MediaQuery.of(context).size.width * 0.4,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              //Addform(isGreen: _showPageState == 0 ? true : false),
-              Addexpensesform(isGreen: _showPageState == 0 ? true : false),
+              // Pass the user ID to the Addexpensesform widget
+              Addexpensesform(isGreen: _showPageState == 0, userId: user.uid),
             ],
           ),
         ),

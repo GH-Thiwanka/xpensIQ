@@ -5,12 +5,12 @@ import 'package:xpensiq/models/expensModel.dart';
 import 'package:xpensiq/models/incomeModel.dart';
 import 'package:xpensiq/pages/budgetPage.dart';
 import 'package:xpensiq/pages/homePage.dart';
-//import 'package:xpensiq/pages/homePage.dart';
 import 'package:xpensiq/pages/profilePage.dart';
 import 'package:xpensiq/pages/transactionPage.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+  final String userId; // Add userId parameter
+  const BottomNavBar({required this.userId, super.key});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -26,7 +26,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   List<Widget> _buildScreens() {
-    return [Screen1(), Screen2(), Screen4(), Screen5()];
+    return [
+      Screen1(userId: widget.userId),
+      Screen2(userId: widget.userId),
+      Screen4(userId: widget.userId),
+      Screen5(userId: widget.userId),
+    ];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -70,7 +75,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
       stateManagement: true,
       hideNavigationBarWhenKeyboardAppears: true,
       padding: const EdgeInsets.all(8),
-      //backgroundColor: kBgMaincolor,
       isVisible: true,
       animationSettings: const NavBarAnimationSettings(
         navBarItemAnimation: ItemAnimationSettings(
@@ -128,39 +132,41 @@ class BudgetCalculations {
 }
 
 class Screen1 extends StatelessWidget {
+  final String userId;
+  const Screen1({required this.userId, super.key});
+
   @override
   Widget build(BuildContext context) {
-    return const Homepage();
+    return Homepage(); // Pass userId if Homepage needs it
   }
 }
 
 class Screen2 extends StatelessWidget {
-  const Screen2({super.key});
+  final String userId;
+  const Screen2({required this.userId, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Transactionpage();
+    return Transactionpage(userId: userId); // Pass the required userId
   }
 }
 
 class Screen4 extends StatelessWidget {
-  const Screen4({super.key});
+  final String userId;
+  const Screen4({required this.userId, super.key});
 
   @override
   Widget build(BuildContext context) {
-    // You should get these lists from your data source (database, provider, etc.)
-    // For now, using empty lists as placeholders
-    List<Expensmodel> expensesList = [];
-    List<Incomemodel> incomesList = [];
-    return Budgetpage();
+    return Budgetpage(); // Pass userId if Budgetpage needs it
   }
 }
 
 class Screen5 extends StatelessWidget {
-  const Screen5({super.key});
+  final String userId;
+  const Screen5({required this.userId, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Profilepage();
+    return Profilepage(); // Pass userId if Profilepage needs it
   }
 }

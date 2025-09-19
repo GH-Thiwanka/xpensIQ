@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:firebase_auth/firebase_auth.dart'; // Uncomment if using Firebase
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/widget/profileWidgets.dart';
+import 'package:xpensiq/service/userService.dart';
+import 'package:xpensiq/pages/loginPage.dart';
 
 class Profilepage extends StatefulWidget {
   const Profilepage({super.key});
@@ -76,7 +77,6 @@ class _ProfilepageState extends State<Profilepage> {
                 ),
                 elevation: 2,
               ),
-
               onPressed: _isLoggingOut
                   ? null
                   : () {
@@ -106,7 +106,7 @@ class _ProfilepageState extends State<Profilepage> {
     );
   }
 
-  // Complete logout functionality
+  // Complete logout functionality that properly clears navigation stack
   Future<void> _performLogout() async {
     if (_isLoggingOut) return;
 
@@ -114,78 +114,126 @@ class _ProfilepageState extends State<Profilepage> {
       _isLoggingOut = true;
     });
 
-    try {
-      // Show loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(kMainColor),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Logging out...',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: kMainTextColor,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
+    bool isDialogOpen = false;
 
-      // Clear all user data
+    try {
+      // Show loading dialog
+      if (mounted) {
+        isDialogOpen = true;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext dialogContext) {
+            return PopScope(
+              canPop: false,
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(kMainColor),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Logging out...',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: kMainTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }
+
+      // Clear user data
       await _clearUserData();
 
+      // Wait a bit for data clearing
+      await Future.delayed(Duration(milliseconds: 800));
+
       // Close loading dialog
-      if (mounted) {
-        Navigator.of(context).pop();
+      if (isDialogOpen && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+        isDialogOpen = false;
       }
 
-      // Navigate to login screen and clear navigation stack
+      // Reset state
       if (mounted) {
+        setState(() {
+          _isLoggingOut = false;
+        });
+      }
+
+      // IMPORTANT: Navigate with complete stack clearing
+      if (mounted) {
+        // Method 1: Use pushAndRemoveUntil with rootNavigator
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+            settings: RouteSettings(name: '/login'),
+          ),
+          (Route<dynamic> route) => false, // This removes ALL routes
+        );
+
+        // Alternative method if the above doesn't work:
+        // You can also try this approach
+        /*
         Navigator.of(context).pushNamedAndRemoveUntil(
-          '/login', // Replace with your actual login route
+          '/login', // Make sure you have this route defined in your MaterialApp
           (Route<dynamic> route) => false,
         );
+        */
       }
 
-      // Show success message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Successfully logged out'),
-              ],
+      // Show success message after navigation
+      Future.delayed(Duration(milliseconds: 1000), () {
+        // Only show if we're still in a valid context
+        try {
+          if (mounted && Navigator.canPop(context)) {
+            return; // Don't show if we can still navigate back
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text('Successfully logged out'),
+                ],
+              ),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.all(16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
+          );
+        } catch (e) {
+          // Ignore any context errors after navigation
+          print('Context no longer valid after logout - this is expected');
+        }
+      });
     } catch (e) {
       // Handle logout error
+      if (isDialogOpen && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+        isDialogOpen = false;
+      }
+
       if (mounted) {
-        Navigator.of(context).pop(); // Close loading dialog
+        setState(() {
+          _isLoggingOut = false;
+        });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -206,48 +254,67 @@ class _ProfilepageState extends State<Profilepage> {
           ),
         );
       }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoggingOut = false;
-        });
-      }
     }
   }
 
-  // Comprehensive data clearing
+  // Clear user data
   Future<void> _clearUserData() async {
     try {
-      // Clear SharedPreferences
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
 
-      // Alternative: Clear specific keys only
-      // await prefs.remove('user_token');
-      // await prefs.remove('user_id');
-      // await prefs.remove('user_email');
-      // await prefs.remove('remember_me');
+      // Clear all user-related keys
+      await prefs.remove('user_token');
+      await prefs.remove('user_id');
+      await prefs.remove('user_email');
+      await prefs.remove('is_logged_in');
 
-      // Clear Firebase Auth (if using Firebase)
-      // await FirebaseAuth.instance.signOut();
-
-      // Clear any other authentication services
-      // await GoogleSignIn().signOut();
-      // await FacebookAuth.instance.logOut();
-
-      // Clear app-specific data
-      // UserManager.instance.clearUser();
-      // AppState.reset();
-      // DatabaseHelper.instance.clearAllData();
-
-      // Clear cached data
-      // await DefaultCacheManager().emptyCache();
+      // Clear UserService data if available
+      try {
+        if (Userservice.getCurrentUserId() != null) {
+          // Add your UserService logout method here if available
+          // await Userservice.logout();
+        }
+      } catch (e) {
+        print('UserService logout error: $e');
+      }
 
       print('User data cleared successfully');
     } catch (e) {
       print('Error clearing user data: $e');
-      rethrow; // Re-throw to handle in _performLogout
+      rethrow;
     }
+  }
+
+  // Handle profile menu item taps
+  void _handleMenuTap(String title) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$title tapped - Feature coming soon!'),
+        backgroundColor: kMainColor,
+        duration: Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  // Handle edit profile tap
+  void _handleEditProfile() {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Edit profile - Feature coming soon!'),
+        backgroundColor: kMainColor,
+        duration: Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   @override
@@ -307,7 +374,7 @@ class _ProfilepageState extends State<Profilepage> {
                     ),
                     child: Row(
                       children: [
-                        // Profile image with modern styling
+                        // Profile image
                         Container(
                           height: MediaQuery.of(context).size.height * 0.13,
                           width: MediaQuery.of(context).size.width * 0.27,
@@ -360,20 +427,23 @@ class _ProfilepageState extends State<Profilepage> {
                           ),
                         ),
 
-                        // Edit button with modern styling
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: kMainColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: kMainColor.withOpacity(0.2),
+                        // Edit button
+                        GestureDetector(
+                          onTap: _handleEditProfile,
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: kMainColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: kMainColor.withOpacity(0.2),
+                              ),
                             ),
-                          ),
-                          child: Icon(
-                            Icons.edit_rounded,
-                            color: kMainColor,
-                            size: 24,
+                            child: Icon(
+                              Icons.edit_rounded,
+                              color: kMainColor,
+                              size: 24,
+                            ),
                           ),
                         ),
                       ],
@@ -397,19 +467,34 @@ class _ProfilepageState extends State<Profilepage> {
                     ),
                     child: Column(
                       children: [
-                        Profilewidgets(title: 'My Wallet', icon: Icons.wallet),
+                        GestureDetector(
+                          onTap: () => _handleMenuTap('My Wallet'),
+                          child: Profilewidgets(
+                            title: 'My Wallet',
+                            icon: Icons.wallet,
+                          ),
+                        ),
                         Divider(
                           color: kBorDivColor.withOpacity(0.3),
                           height: 1,
                         ),
-                        Profilewidgets(title: 'Settings', icon: Icons.settings),
+                        GestureDetector(
+                          onTap: () => _handleMenuTap('Settings'),
+                          child: Profilewidgets(
+                            title: 'Settings',
+                            icon: Icons.settings,
+                          ),
+                        ),
                         Divider(
                           color: kBorDivColor.withOpacity(0.3),
                           height: 1,
                         ),
-                        Profilewidgets(
-                          title: 'Export Data',
-                          icon: Icons.file_download_outlined,
+                        GestureDetector(
+                          onTap: () => _handleMenuTap('Export Data'),
+                          child: Profilewidgets(
+                            title: 'Export Data',
+                            icon: Icons.file_download_outlined,
+                          ),
                         ),
                       ],
                     ),
@@ -417,7 +502,7 @@ class _ProfilepageState extends State<Profilepage> {
 
                   SizedBox(height: 30),
 
-                  // Enhanced logout button
+                  // Logout button
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
