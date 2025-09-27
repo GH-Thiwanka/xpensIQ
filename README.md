@@ -1,6 +1,8 @@
 # XpensIQ 💰
 
 A Flutter-based mobile application for managing daily expenses with a clean UI and smooth performance. Perfect for anyone looking to stay organized with personal finances.
+
+
 <img width="480" height="480" alt="image" src="https://github.com/user-attachments/assets/4a8a21f1-a819-4746-95db-1fb4d1ddcc91" />
 
 
