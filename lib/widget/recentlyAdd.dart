@@ -320,9 +320,7 @@ class TransactionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    transaction.description.isNotEmpty
-                        ? transaction.description
-                        : transaction.category,
+                    transaction.category,
                     style: TextStyle(
                       color: kMainTextColor,
                       fontWeight: FontWeight.w600,
@@ -333,7 +331,7 @@ class TransactionCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    transaction.category,
+                    transaction.description,
                     style: TextStyle(
                       color: kMainTextColor.withOpacity(0.7),
                       fontSize: 14,

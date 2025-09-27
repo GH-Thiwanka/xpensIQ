@@ -327,43 +327,22 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(kDefultPadding * 1.5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    currentDate,
-                                    style: TextStyle(
-                                      color: kSecondaryTextColor,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.65,
-                                    child: Text(
-                                      'Hello, ${username.isNotEmpty ? username : 'User'}',
-                                      style: const TextStyle(
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                currentDate,
+                                style: TextStyle(color: kSecondaryTextColor),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  // Implement notifications with user isolation
-                                },
-                                icon: const Icon(
-                                  Icons.menu,
-                                  color: kSecondaryColor,
-                                  size: 30,
+                              Text(
+                                'Hello, ${username.isNotEmpty ? username : 'User'}',
+                                style: const TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -453,7 +432,7 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         style: const TextStyle(
                                           color: kCardColor,
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -533,7 +512,7 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         style: const TextStyle(
                                           color: kCardColor,
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),

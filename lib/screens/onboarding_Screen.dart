@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:xpensiq/constants/color.dart';
 import 'package:xpensiq/data/onboarding_data.dart';
+import 'package:xpensiq/pages/loginPage.dart';
 import 'package:xpensiq/pages/registerPage.dart';
 import 'package:xpensiq/screens/front_page.dart';
 import 'package:xpensiq/screens/shared_onboarding.dart';
@@ -95,6 +96,39 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
             ),
           ),
+          if (showDetalsPage)
+            Positioned(
+              bottom: 30,
+              right: 0,
+              left: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account? ",
+                    style: TextStyle(color: kSecondaryTextColor, fontSize: 16),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        color: kMainColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           if (!showDetalsPage)
             Positioned(
               top: 10,

@@ -351,7 +351,7 @@ class _RegisterpageState extends State<Registerpage> {
                     ),
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
                 // Updated button with loading state and proper Firebase integration
                 GestureDetector(

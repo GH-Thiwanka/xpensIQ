@@ -13,7 +13,50 @@ class Profilepage extends StatefulWidget {
 }
 
 class _ProfilepageState extends State<Profilepage> {
+  String? userId;
+  String username = '';
+  String email = "";
+  bool _isLoading = true;
   bool _isLoggingOut = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeUserAndData();
+  }
+
+  Future<void> _initializeUserAndData() async {
+    try {
+      // Get current user ID first
+      userId = Userservice.getCurrentUserId();
+
+      if (userId == null) {
+        print('User not logged in.');
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // Get user data with proper user isolation
+      final userData = await Userservice.getUserData();
+      if (userData['username'] != null) {
+        setState(() {
+          username = userData['username']!;
+          email = userData['email']!;
+        });
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error initializing user data: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   // Enhanced logout confirmation dialog
   Future<void> _showLogoutDialog() async {
@@ -360,7 +403,7 @@ class _ProfilepageState extends State<Profilepage> {
                 children: [
                   // Header section with profile info
                   Container(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -380,7 +423,7 @@ class _ProfilepageState extends State<Profilepage> {
                           width: MediaQuery.of(context).size.width * 0.27,
                           decoration: BoxDecoration(
                             border: Border.all(width: 3, color: kMainColor),
-                            borderRadius: BorderRadius.circular(25),
+                            borderRadius: BorderRadius.circular(100),
                             boxShadow: [
                               BoxShadow(
                                 color: kMainColor.withOpacity(0.3),
@@ -390,7 +433,7 @@ class _ProfilepageState extends State<Profilepage> {
                             ],
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(22),
+                            borderRadius: BorderRadius.circular(100),
                             child: Image.asset(
                               'assets/clock.png',
                               fit: BoxFit.cover,
@@ -415,11 +458,30 @@ class _ProfilepageState extends State<Profilepage> {
                               ),
                               SizedBox(height: 4),
                               Text(
-                                'Iriana Saliha',
+                                username.isNotEmpty ? username : 'User',
                                 style: TextStyle(
                                   color: kMainTextColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              SizedBox(height: kDefultPadding * 1.5),
+                              Text(
+                                'Email',
+                                style: TextStyle(
+                                  color: kSecondaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                email.isNotEmpty ? email : 'email',
+                                style: TextStyle(
+                                  color: kMainTextColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                   letterSpacing: -0.5,
                                 ),
                               ),
@@ -528,8 +590,8 @@ class _ProfilepageState extends State<Profilepage> {
                             child: Row(
                               children: [
                                 Container(
-                                  width: 55,
-                                  height: 55,
+                                  width: 45,
+                                  height: 45,
                                   decoration: BoxDecoration(
                                     color: kExepenceColor.withOpacity(0.15),
                                     borderRadius: BorderRadius.circular(15),
@@ -548,7 +610,7 @@ class _ProfilepageState extends State<Profilepage> {
                                         )
                                       : Icon(
                                           Icons.logout_rounded,
-                                          size: 28,
+                                          size: 26,
                                           color: kExepenceColor,
                                         ),
                                 ),
@@ -574,6 +636,15 @@ class _ProfilepageState extends State<Profilepage> {
                           ),
                         ),
                       ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                  Text(
+                    'Version 1.0.0',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: kSecondaryTextColor.withOpacity(0.5),
                     ),
                   ),
                 ],

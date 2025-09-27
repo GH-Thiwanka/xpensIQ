@@ -13,13 +13,13 @@ class Profilewidgets extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 65,
-            height: 65,
+            width: 45,
+            height: 45,
             decoration: BoxDecoration(
               color: kMainColor.withAlpha(40),
               borderRadius: BorderRadius.circular(15),
             ),
-            child: Icon(icon, size: 38, color: kMainColor),
+            child: Icon(icon, size: 26, color: kMainColor),
           ),
           SizedBox(width: 15),
           Text(

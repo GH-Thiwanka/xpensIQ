@@ -478,7 +478,6 @@ class _LoginPageState extends State<LoginPage> {
                           color: _isLoading ? Colors.grey : kMainColor,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
